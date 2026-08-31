@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WiFi'ye Bağlan</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #0f1115;
+    --card: #171a21;
+    --text: #f4f5f7;
+    --muted: #9aa2af;
+    --accent: #3ddc84;
+    --accent-text: #05130a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .card {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card);
+    border-radius: 24px;
+    padding: 32px 28px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+  .icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 20px;
+    margin: 0 0 4px;
+  }
+  .cafe {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .field {
+    background: rgba(255,255,255,0.05);
+    border-radius: 14px;
+    padding: 14px 16px;
+    text-align: left;
+    margin-bottom: 12px;
+  }
+  .field .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .field .value {
+    font-size: 16px;
+    font-weight: 600;
+    word-break: break-all;
+  }
+  button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    background: var(--accent);
+    color: var(--accent-text);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  button:active { opacity: 0.85; }
+  .hint {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .toast {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--accent);
+    min-height: 18px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">📶</div>
+    <h1 id="cafeName">WiFi Bilgisi</h1>
+    <div class="cafe" id="ssidLine"></div>
+
+    <div class="field">
+      <div class="label">Ağ Adı</div>
+      <div class="value" id="ssidValue">—</div>
+    </div>
+    <div class="field" id="passField">
+      <div class="label">Şifre</div>
+      <div class="value" id="passValue">—</div>
+    </div>
+
+    <button id="copyBtn">Şifreyi Kopyala</button>
+    <div class="toast" id="toast"></div>
+
+    <div class="hint">
+      Kopyaladıktan sonra telefonunun WiFi ayarlarından ağa dokunup şifreyi yapıştır.
+    </div>
+  </div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const ssid = params.get('ssid') || '';
+  const pass = params.get('pass') || '';
+  const cafe = params.get('cafe') || '';
+
+  document.getElementById('cafeName').textContent = cafe ? cafe : 'WiFi Bilgisi';
+  document.getElementById('ssidLine').textContent = cafe ? 'WiFi ağına hoş geldin' : '';
+  document.getElementById('ssidValue').textContent = ssid || 'Bilgi bulunamadı';
+
+  const passField = document.getElementById('passField');
+  const passValue = document.getElementById('passValue');
+  const copyBtn = document.getElementById('copyBtn');
+
+  if (!pass) {
+    passValue.textContent = 'Açık ağ (şifre yok)';
+    copyBtn.style.display = 'none';
+  } else {
+    passValue.textContent = pass;
+  }
+
+  copyBtn.addEventListener('click', async () => {
+    const toast = document.getElementById('toast');
+    try {
+      await navigator.clipboard.writeText(pass);
+      toast.textContent = 'Kopyalandı ✅';
+    } catch (e) {
+      toast.textContent = 'Kopyalanamadı, şifreyi elle yazabilirsin.';
+    }
+  });
+</script>
+</body>
+</html>
