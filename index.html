@@ -82,6 +82,11 @@
     cursor: pointer;
   }
   button:active { opacity: 0.85; }
+  .menu-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--text);
+  }
   .hint {
     margin-top: 20px;
     font-size: 12px;
@@ -112,6 +117,7 @@
     </div>
 
     <button id="copyBtn">Şifreyi Kopyala</button>
+    <button id="menuBtn" class="menu-btn" style="display:none;">Menüyü Gör</button>
     <div class="toast" id="toast"></div>
 
     <div class="hint">
@@ -124,6 +130,7 @@
   const ssid = params.get('ssid') || '';
   const pass = params.get('pass') || '';
   const cafe = params.get('cafe') || '';
+  const menu = params.get('menu') || '';
 
   document.getElementById('cafeName').textContent = cafe ? cafe : 'WiFi Bilgisi';
   document.getElementById('ssidLine').textContent = cafe ? 'WiFi ağına hoş geldin' : '';
@@ -149,6 +156,14 @@
       toast.textContent = 'Kopyalanamadı, şifreyi elle yazabilirsin.';
     }
   });
+
+  const menuBtn = document.getElementById('menuBtn');
+  if (menu) {
+    menuBtn.style.display = 'block';
+    menuBtn.addEventListener('click', () => {
+      window.location.href = menu;
+    });
+  }
 </script>
 </body>
 </html>
